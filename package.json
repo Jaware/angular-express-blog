@@ -1,9 +1,13 @@
 {
-    "name": "application-name"
+    "name": "node-angular-starter-app"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
-      "express": "2.5.10"
-    , "jade": ">= 0.0.1"
+      "express": "3.x"
+    , "socket.io": "0.9.10"
+    , "swig": ">= 0.13.5"
+    , "consolidate": ">=0.9.1"
+    , "debug": ">=0.7.0"
+    , "rethinkdb": "*"
   }
 }
