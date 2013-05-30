@@ -5,15 +5,25 @@
 
 var express = require('express'),
   routes = require('./routes'),
-  api = require('./routes/api');
+  api = require('./routes/api'),
+  cons = require('consolidate'),
+  swig = require('swig');
 
-var app = module.exports = express.createServer();
+var app = module.exports = express();
 
 // Configuration
 
+// NOTE: Swig requires some extra setup
+// This helps it know where to look for includes and parent templates
+swig.init({
+    root: __dirname + '/views',
+    allowErrors: true // allows errors to be thrown and caught by express instead of suppressed by Swig
+});
+
 app.configure(function(){
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
+  app.engine('html', cons.swig);
+  app.set('view engine', 'html');
   app.set('view options', {
     layout: false
   });
@@ -22,6 +32,7 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
   app.use(app.router);
 });
+
 
 
 app.configure('development', function(){
@@ -35,6 +46,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
+// app.get('/addPost', routes.addPost);
 app.get('/partials/:name', routes.partials);
 
 // JSON API
@@ -52,5 +64,5 @@ app.get('*', routes.index);
 // Start server
 
 app.listen(3000, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
